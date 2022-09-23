@@ -1,0 +1,23 @@
+{
+    "extends": "fastify-tsconfig",
+    "compilerOptions": {
+        "target": "esnext",//es2017
+        "lib": ["es2017", "esnext.asynciterable"],
+        "outDir": "dist",
+        "sourceMap": true,
+        "typeRoots": ["node_modules/@types"],
+        "module": "commonjs",
+        "pretty": true,
+        "baseUrl": "src",
+        "paths": {
+            "@/*": ["*"],
+            "@interfaces/*": ["interfaces/*"],
+            "@routes/*": ["routes/*"],
+            "@utils/*": ["utils/*"],
+            "@middlewares/*": ["middlewares/*"],
+        },
+        "declaration": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"]
+}

@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  description: "API's Swagger Docs"
+  version: "1.0.0"
+  title: "API's Swagger Docs"
+  contact:
+    email: "raviroshanmehta@gmail.com"
+servers:
+  - url: http://127.0.0.1:5000/api/v1
+    description: Local Server
+  - url: http://127.0.0.1:5000/api/v1
+    description: Development Server
+tags:
+  - name: health
+    description: Application health check
+  - name: auth
+    description: Application auth routes
+  - name: users
+    description: Operations about users
+paths:
+  /health-check:
+    get:
+      description: Endpoint for application health check
+      tags:
+        - health
+      responses:
+        200:
+          description: 'Server is alive'
+        500:
+          description: 'Server error'
+  /auth/login:
+    post:
+      description: user login
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - role
+                - password
+              properties:
+                role:
+                  type: string
+                  example: user
+                email:
+                  type: string
+                  example: raviroshanmehta@gmail.com
+                password:
+                  type: string
+                  example: 'password'
+                device:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: a577f69031845c8cb
+                    os:
+                      type: string
+                      example: android
+                    version:
+                      type: string
+                      example: "11.12.12"
+                    firebase_token:
+                      type: string
+                      example: >-
+                        f6903eJk2rjmCQ1WeVMwRz-VK5v:APA91bGcmDCPuC98jFmskqaH5GEqbacTFYFgjxtHTvy_s3SUzorE1845c8cb
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+  /auth/logout:
+    get:
+      description: Logout
+      tags:
+        - auth
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /users:
+    get:
+      description: users listing
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []  
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    User:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: Ravi Roshan
+        email:
+          type: string
+          example: raviroshanmehta@gmail.com
+        password:
+          type: string
+          example: password

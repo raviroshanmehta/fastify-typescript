@@ -1,0 +1,47 @@
+{
+  "name": "fastify-app",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with Fastify-CLI.",
+  "main": "app.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "copy-files": "cp -r ./src/public ./src/views ./dist",
+    "test": "npm run build:ts && npm run copy-files && tsc -p test/tsconfig.json && tap --ts \"test/**/*.test.ts\"",
+    "start": "cross-env NODE_ENV=production npm run build:ts && fastify start -l info dist/app.js",
+    "build:ts": "tsc && npm run copy-files",
+    "watch:ts": "tsc -w && npm run copy-files",
+    "dev": "cross-env NODE_ENV=development npm run build:ts && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
+    "dev:start": "cross-env NODE_ENV=development && fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/autoload": "^5.0.0",
+    "@fastify/cors": "^8.1.0",
+    "@fastify/etag": "^4.1.0",
+    "@fastify/helmet": "^10.0.0",
+    "@fastify/jwt": "^6.3.2",
+    "@fastify/redis": "^6.0.0",
+    "@fastify/sensible": "^5.0.0",
+    "@fastify/static": "^6.5.0",
+    "@fastify/swagger": "^7.5.1",
+    "@fastify/view": "^7.1.0",
+    "cross-env": "^7.0.3",
+    "ejs": "^3.1.8",
+    "fastify": "^4.0.0",
+    "fastify-cli": "^5.4.1",
+    "fastify-plugin": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/tap": "^15.0.5",
+    "ts-node": "^10.4.0",
+    "concurrently": "^7.0.0",
+    "fastify-tsconfig": "^1.0.1",
+    "tap": "^16.1.0",
+    "typescript": "^4.5.4"
+  }
+}

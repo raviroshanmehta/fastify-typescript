@@ -1,0 +1,26 @@
+openapi: 3.0.0
+info:
+  description: "API's Swagger Docs"
+  version: "2.0.0"
+  title: "API's Swagger Docs"
+  contact:
+    email: "raviroshanmehta@gmail.com"
+servers:
+  - url: http://127.0.0.1:5000/api/v2
+    description: Local Server
+  - url: http://127.0.0.1:5000/api/v2
+    description: Development Server
+tags:
+  - name: health
+    description: Application health check
+paths:
+  /health-check:
+    get:
+      description: Endpoint for application health check
+      tags:
+        - health
+      responses:
+        200:
+          description: 'Server is alive'
+        500:
+          description: 'Server error'
