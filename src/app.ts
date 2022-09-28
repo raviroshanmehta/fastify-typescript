@@ -8,6 +8,7 @@ import fastifyEtag from "@fastify/etag";
 import fastifyHelmet from "@fastify/helmet";
 import pointOfView from "@fastify/view";
 import fastifyCors from "@fastify/cors";
+// import fastifyLogs from "@fastify/one-line-logger";
 
 
 import { redisDb } from "@interfaces/dbConnections";
@@ -33,7 +34,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
             `${process.env.MS_NAME}:server_up_timestamp`,
             Date.now()
         );
- 
+       
         fastify.register(fastifyStatic, {
             root: join(__dirname, "public"),
             prefix: "/",
@@ -59,6 +60,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
             },
             root: join(__dirname, "views"),
         });
+
 
         // Do not touch the following lines
 

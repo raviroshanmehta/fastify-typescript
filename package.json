@@ -24,6 +24,7 @@
     "@fastify/etag": "^4.1.0",
     "@fastify/helmet": "^10.0.0",
     "@fastify/jwt": "^6.3.2",
+    "@fastify/one-line-logger": "^1.0.0",
     "@fastify/redis": "^6.0.0",
     "@fastify/sensible": "^5.0.0",
     "@fastify/static": "^6.5.0",
@@ -33,7 +34,8 @@
     "ejs": "^3.1.8",
     "fastify": "^4.0.0",
     "fastify-cli": "^5.4.1",
-    "fastify-plugin": "^4.0.0"
+    "fastify-plugin": "^4.0.0",
+    "mongoose": "^6.6.1"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

@@ -1,6 +1,8 @@
 import { FastifyPluginAsync } from "fastify";
 import { responseData } from "@interfaces/response";
 
+
+
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     fastify.get(
         "/",
@@ -9,7 +11,6 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
         async (request: any, reply: any) => {
             try {
-                
                 return fastify.sendResponse({
                     message: "Feteched successfully",
                     data: {

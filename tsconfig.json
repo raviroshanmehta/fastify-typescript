@@ -15,6 +15,9 @@
             "@routes/*": ["routes/*"],
             "@utils/*": ["utils/*"],
             "@middlewares/*": ["middlewares/*"],
+            "@controllers/*": ["controllers/*"],
+            "@models/*": ["models/*"],
+            "@services/*": ["services/*"],
         },
         "declaration": true
     },
