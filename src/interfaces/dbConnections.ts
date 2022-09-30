@@ -4,7 +4,3 @@ export interface redisDb {
     password?: string;
     family: number;
 }
-
-export interface mongoDb {
-    uri: string;
-}

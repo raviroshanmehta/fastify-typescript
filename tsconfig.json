@@ -16,8 +16,8 @@
             "@utils/*": ["utils/*"],
             "@middlewares/*": ["middlewares/*"],
             "@controllers/*": ["controllers/*"],
-            "@models/*": ["models/*"],
             "@services/*": ["services/*"],
+            "@plugins/*": ["plugins/*"],
         },
         "declaration": true
     },

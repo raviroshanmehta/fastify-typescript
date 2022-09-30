@@ -31,7 +31,7 @@ const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
             } as responseData);
         } catch (err: any) {
             throw fastify.httpErrors.badRequest(
-                `Something went wrong: ${err.message}`
+                `Something went wrong: ${err.message ? err.message : err}`
             );
         }
     });

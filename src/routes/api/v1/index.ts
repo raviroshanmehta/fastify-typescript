@@ -1,7 +1,8 @@
 import { FastifyPluginAsync } from "fastify";
-import { responseData } from "@interfaces/response";
+import { responseData } from "@interfaces/response"; 
  
 const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
+    
     await fastify.register(require("@fastify/swagger"), {
         routePrefix: "/docs",
         mode: "static",
@@ -16,21 +17,14 @@ const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
 
     fastify.get("/health-check", async (request: any, reply: any) => {
-        try{
-            // return reply.send(
-            //     await fastify.sendResponse({
-            //         message:
-            //             "The Application is Up and Running. API Version: V1",
-            //         data: {},
-            //     } as responseData)
-            // );
+        try {
             return fastify.sendResponse({
-                message: "The Application is Up and Running. API Version: V1",
-                data: {},
+                message: "The Application is Up and Running. API Version: ",
+                data: {  },
             } as responseData);
         } catch (err: any) {
             throw fastify.httpErrors.badRequest(
-                `Something went wrong: ${err.message}`
+                `Something went wrong: ${err.message ? err.message : err}`
             );
         }
     });

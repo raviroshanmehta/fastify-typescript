@@ -11,34 +11,6 @@ export default fp<AuthPluginOptions>(async (fastify, opts) => {
     fastify.register(fastifyJwt, {
         secret: process.env.JWT_SECERET as string,
     });
-
-    fastify.decorate("authLogin", async function (request: any, reply: any) {
-        try {
-            //db query fetch
-            const user = { 
-                name: "Ravi Roshan",
-                _id : "1",
-                role: "user"
-            }
-            if(!user)
-                throw fastify.httpErrors.badRequest(`No data`);
-
-            const token = await reply.jwtSign(
-                {
-                    _id: user._id,
-                    role: user.role
-                },
-                { expiresIn: 60 * 60 }
-            );
-            //set auth token in redis
-            await fastify.redis.set(`${process.env.MS_NAME}:LoggedUsers:${user._id}`,token);
-
-            request.token = token;
-            return;
-        } catch (err: any) {
-            throw fastify.httpErrors.badRequest(`Login Error: ${err.message}`);
-        }
-    });
     
     fastify.decorate("authVerify", async function (request: any, reply: any) {
         try {
@@ -60,7 +32,6 @@ export default fp<AuthPluginOptions>(async (fastify, opts) => {
 // When using .decorate you have to specify added properties for Typescript
 declare module "fastify" {
     export interface FastifyInstance {
-        authLogin(): string;
         authVerify(): string;
     }
 }

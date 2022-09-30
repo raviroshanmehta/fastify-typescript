@@ -14,7 +14,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                 let cond = {
                     status: true,
                     is_deleted: false,
-                    role : 'user'
+                    role: "user",
                 };
 
                 const users = await User.find(cond);
@@ -24,7 +24,6 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                         users,
                     },
                 } as responseData);
-
             } catch (err: any) {
                 throw fastify.httpErrors.badRequest(
                     `Something went wrong: ${err.message ? err.message : err}`
@@ -46,7 +45,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                 return fastify.sendResponse({
                     message: "Added successfully",
                     data: {
-                        user
+                        user,
                     },
                 } as responseData);
             } catch (err: any) {
@@ -104,7 +103,9 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                     _id: request.params.id,
                 };
 
-                const user = await User.findOneAndUpdate(cond, request.body, { new: true });
+                const user = await User.findOneAndUpdate(cond, request.body, {
+                    new: true,
+                });
                 if (!user) {
                     throw fastify.httpErrors.notFound(
                         `User not found with id ${request.params.id}`
@@ -149,7 +150,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                     email: user.email + "_DELETED_" + Date.now(),
                     mobile: user.mobile + "_DELETED_" + Date.now(),
                     is_deleted: true,
-                }); 
+                });
 
                 return fastify.sendResponse({
                     message: "Deleted successfully",

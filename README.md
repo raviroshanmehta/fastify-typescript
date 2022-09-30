@@ -8,12 +8,12 @@ This app is generated via fastify-cli generator.
 ## Features Working
 
 - Typescript 
-- REST APIs versoning enabled. like - /api/v1 , api/v2
-- Admin Panel routing enabled with ejs template - /admin
+- REST APIs versoning enabled - /api/v1 , api/v2
+- Admin Panel routing enabled - /admin
 - Swagger enabled for APIs docs.
 
 ## To Do
-- Admin Panel CURD Manager
+- Admin Login setup with user's CURD
 - Deployment Setup via PM2, Docker, Kubernetes
 - Unit Testing 
 
@@ -49,6 +49,7 @@ If your app didn't started, You need to check error. Or create an issue if still
 | Link | Link |
 | ------ | ------ |
 | Home Page | http://127.0.0.1:5000 |
+| Seed Admin Record | http://127.0.0.1:5000/api/seed |
 | Admin | http://127.0.0.1:5000/admin |
 | API V1 | http://127.0.0.1:5000/api/v1 |
 | API V2 | http://127.0.0.1:5000/api/v2 |

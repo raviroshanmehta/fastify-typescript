@@ -16,7 +16,7 @@ export default fp<UtilsPluginOptions>(async (fastify, opts) => {
                 };
             } catch (err: any) {
                 throw fastify.httpErrors.badRequest(
-                    `Something went wrong: ${err.message}`
+                    `Something went wrong: ${err.message ? err.message : err}`
                 );
             }
         }

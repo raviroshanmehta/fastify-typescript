@@ -13,6 +13,10 @@ servers:
 tags:
   - name: health
     description: Application health check
+  - name: auth
+    description: Application auth routes
+  - name: users
+    description: Operations about users
 paths:
   /health-check:
     get:
@@ -24,3 +28,195 @@ paths:
           description: 'Server is alive'
         500:
           description: 'Server error'
+  /auth/login:
+    post:
+      description: user login
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - role
+                - password
+              properties:
+                role:
+                  type: string
+                  example: user
+                email:
+                  type: string
+                  example: superadmin@mail.com
+                password:
+                  type: string
+                  example: 'password'
+                device:
+                  $ref: '#/components/schemas/Device'
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+  /auth/logout:
+    get:
+      description: Logout
+      tags:
+        - auth
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /users:
+    get:
+      description: users listing
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []  
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+    post:
+      description: add new user
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []  
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: 'Success'
+        400:
+          description: 'Bad request'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+  /users/{id}:
+    get:
+      description: get user data by id
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []  
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+    put:
+      description: update user
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []  
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: 'Success'
+        400:
+          description: 'Bad request'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+    delete:
+      description: delete data by id
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []  
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'Auth error'
+        500:
+          description: 'Server error'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a577f69031845c8cb
+        os:
+          type: string
+          example: android
+        version:
+          type: string
+          example: "11.12.12"
+        firebase_token:
+          type: string
+          example: >-
+            f6903eJk2rjmCQ1WeVMwRz-VK5v:APA91bGcmDCPuC98jFmskqaH5GEqbacTFYFgjxtHTvy_s3SUzorE1845c8cb
+    User:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: Ravi Roshan
+        email:
+          type: string
+          example: raviroshanmehta@gmail.com
+        mobile:
+          type: string
+          example: "9782547643"
+        password:
+          type: string
+          example: password
+        device:
+          $ref: '#/components/schemas/Device'
