@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "copy-files": "cp -r ./src/public ./src/views ./dist",
+    "copy-files": "cp -r ./src/public ./src/views ./src/locales ./dist",
     "test": "npm run build:ts && npm run copy-files && tsc -p test/tsconfig.json && tap --ts \"test/**/*.test.ts\"",
     "start": "cross-env NODE_ENV=production npm run build:ts && fastify start -l info dist/app.js",
     "build:ts": "tsc && npm run copy-files",
@@ -24,7 +24,6 @@
     "@fastify/etag": "^4.1.0",
     "@fastify/helmet": "^10.0.0",
     "@fastify/jwt": "^6.3.2",
-    "@fastify/one-line-logger": "^1.0.0",
     "@fastify/redis": "^6.0.0",
     "@fastify/sensible": "^5.0.0",
     "@fastify/static": "^6.5.0",
@@ -36,7 +35,9 @@
     "fastify": "^4.0.0",
     "fastify-cli": "^5.4.1",
     "fastify-plugin": "^4.0.0",
-    "mongoose": "^6.6.1"
+    "mongoose": "^6.6.1",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

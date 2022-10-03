@@ -3,6 +3,7 @@ import { responseData } from "@interfaces/response";
  
 const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     
+
     await fastify.register(require("@fastify/swagger"), {
         routePrefix: "/docs",
         mode: "static",
@@ -19,8 +20,8 @@ const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     fastify.get("/health-check", async (request: any, reply: any) => {
         try {
             return fastify.sendResponse({
-                message: "The Application is Up and Running. API Version: ",
-                data: {  },
+                message: "The Application is Up and Running. API Version: V1",
+                data: { },
             } as responseData);
         } catch (err: any) {
             throw fastify.httpErrors.badRequest(

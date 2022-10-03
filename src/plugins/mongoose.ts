@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { FastifyPluginAsync, FastifyPluginOptions } from "fastify";
 import fp from "fastify-plugin";
 import mongoose from "mongoose";
+import { logger } from "../utilities/logger";
 
 import { User, UserModel } from "../models/userModel";
 
@@ -36,8 +37,8 @@ const ConnectDB: FastifyPluginAsync<MyPluginOptions> = async (
 
         fastify.decorate("db", { models });
     } catch (error: any) {
+        logger.error(`${error}`);
         fastify.log.error(error);
-        throw fastify.httpErrors.badRequest(`Something went wrong: ${error}`);
     }
 };
 export default fp(ConnectDB);

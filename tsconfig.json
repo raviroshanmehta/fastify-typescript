@@ -10,14 +10,8 @@
         "pretty": true,
         "baseUrl": "src",
         "paths": {
-            "@/*": ["*"],
             "@interfaces/*": ["interfaces/*"],
-            "@routes/*": ["routes/*"],
-            "@utils/*": ["utils/*"],
-            "@middlewares/*": ["middlewares/*"],
-            "@controllers/*": ["controllers/*"],
-            "@services/*": ["services/*"],
-            "@plugins/*": ["plugins/*"],
+            "@routes/*": ["routes/*"]
         },
         "declaration": true
     },

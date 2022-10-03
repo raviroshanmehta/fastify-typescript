@@ -21,11 +21,25 @@ export default fp<UtilsPluginOptions>(async (fastify, opts) => {
             }
         }
     );
+
+    fastify.decorate(
+        "saveLocales",
+        async function (request: any, reply: any) {
+            try {
+                fastify.log.info("SaveLocales called");
+            } catch (err: any) {
+                throw fastify.httpErrors.badRequest(
+                    `Something went wrong: ${err.message ? err.message : err}`
+                );
+            }
+        }
+    );
 });
 
 // When using .decorate you have to specify added properties for Typescript
 declare module "fastify" {
     export interface FastifyInstance {
         sendResponse(data: any): string;
+        saveLocales(): string;
     }
 }

@@ -11,6 +11,8 @@ import fastifyCors from "@fastify/cors";
 
 import { redisDb } from "@interfaces/dbConnections";
 
+import { logger } from "./utilities/logger";
+
 export type AppOptions = {
     // Place your custom options for app below here.
 } & Partial<AutoloadPluginOptions>;
@@ -20,6 +22,8 @@ const app: FastifyPluginAsync<AppOptions> = async (
     opts
 ): Promise<void> => {
     try {
+        
+        
         //redis connection
         await fastify.register(fastifyRedis, {
             host: process.env.REDIS_HOST,
@@ -32,6 +36,13 @@ const app: FastifyPluginAsync<AppOptions> = async (
             `${process.env.MS_NAME}:server_up_timestamp`,
             Date.now()
         );
+        
+        // let lang: string;
+        // fastify.addHook("onRequest", async (request, reply) => {
+        //     lang  = (request.headers["accept-language"] as string) || "en";
+        //     console.log("lang", lang);
+        // });
+        
        
         fastify.register(fastifyStatic, {
             root: join(__dirname, "public"),
@@ -52,11 +63,31 @@ const app: FastifyPluginAsync<AppOptions> = async (
                 callback(null, corsOptions);
             };
         });
+        
         fastify.register(pointOfView, {
             engine: {
                 ejs: require("ejs"),
             },
             root: join(__dirname, "views"),
+        });
+
+        fastify.setErrorHandler(function (error, request, reply) {
+            const replyJson = {
+                statusCode: error.statusCode || 500,
+                error: "Bad Request",
+                message: error.message ? JSON.parse(error.message) : "Something went wrong.",
+            };
+             
+            if (replyJson.statusCode >= 500) {
+                replyJson.error = 'Server Error';
+            } 
+            // Log error
+            logger.error(
+                `${process.env.NODE_ENV} === ${process.env.MS_NAME} === ${error}`
+            );
+            fastify.log.error(error);
+            // Send error response
+            reply.status(replyJson.statusCode).send(replyJson);
         });
 
         // Do not touch the following lines
@@ -75,8 +106,18 @@ const app: FastifyPluginAsync<AppOptions> = async (
             dir: join(__dirname, "routes"),
             options: opts,
         });
+
+        logger.info(`=================================`);
+        logger.info(
+            `======= ENV: ${process.env.NODE_ENV}, MS_NAME: ${process.env.MS_NAME} =======`
+        );
+        logger.info(`🚀 App listening on the port ${process.env.PORT}`);
+        logger.info(`=================================`);
     } catch (err) {
-        console.log("App crashed", err);
+        logger.error(
+            `${process.env.NODE_ENV} === ${process.env.MS_NAME} === ${err}`
+        );
+        fastify.log.error(err);
     }
 };
 

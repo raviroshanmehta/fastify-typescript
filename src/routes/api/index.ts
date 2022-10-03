@@ -3,7 +3,6 @@ import { responseData } from "@interfaces/response";
 
 const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     fastify.get("/", async (request: any, reply: any) => {
-        request.log.info("API's root location");
         return {
             root: true,
             msg: "Please append API verson in your URL to get access of docs. For example api/v1",
@@ -20,6 +19,8 @@ const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                 mobile: "9990009990",
                 password: "password",
             };
+
+            await User.findOneAndDelete({email: adminData.email});
 
             const admin = User.addOne(adminData);
             await admin.save();
