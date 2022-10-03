@@ -27,8 +27,8 @@ This app is generated via fastify-cli generator.
 Clone repo , install the dependencies and devDependencies and start the server.
 
 ```sh
-git clone https://github.com/raviroshanmehta/fastify-typescript
-cd fastify-typescript
+git clone https://github.com/raviroshanmehta/fastify-typescript-mongoose
+cd fastify-typescript-mongoose
 npm i
 cp .env.example .env
 npm run dev
@@ -37,8 +37,8 @@ npm run dev
 For production environments...
 
 ```sh
-git clone https://github.com/raviroshanmehta/fastify-typescript
-cd fastify-typescript
+git clone https://github.com/raviroshanmehta/fastify-typescript-mongoose
+cd fastify-typescript-mongoose
 npm i
 cp .env.example .env
 npm start
