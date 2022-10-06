@@ -1,3 +1,4 @@
+import { join } from "path";
 import fp from "fastify-plugin";
 export interface UtilsPluginOptions {
     // Specify Utils plugin options here
@@ -8,7 +9,7 @@ export interface UtilsPluginOptions {
 export default fp<UtilsPluginOptions>(async (fastify, opts) => {
     fastify.decorate(
         "sendResponse",
-        async function (input: any, request: any, reply: any) {
+        async function (input: any): Promise<{ message: string, data : any }> {
             try {
                 return {
                     message: input.message ? input.message : "Success",
@@ -22,24 +23,31 @@ export default fp<UtilsPluginOptions>(async (fastify, opts) => {
         }
     );
 
-    fastify.decorate(
-        "saveLocales",
-        async function (request: any, reply: any) {
-            try {
-                fastify.log.info("SaveLocales called");
-            } catch (err: any) {
-                throw fastify.httpErrors.badRequest(
-                    `Something went wrong: ${err.message ? err.message : err}`
-                );
+    fastify.decorate("locales", function (lang: string, key: string) {
+        try {
+            let msgg = "Success";
+            let localeData = require(join(
+                __dirname,
+                "../locales",
+                lang + ".json"
+            ));
+            // console.log("localeData", localeData);
+            if (localeData && localeData[key]) {
+                msgg = localeData[key];
             }
+            return msgg;
+        } catch (err: any) {
+            throw fastify.httpErrors.badRequest(
+                `Something went wrong: ${err.message ? err.message : err}`
+            );
         }
-    );
+    });
 });
 
 // When using .decorate you have to specify added properties for Typescript
 declare module "fastify" {
     export interface FastifyInstance {
         sendResponse(data: any): string;
-        saveLocales(): string;
+        locales(lang: string, key: string): string;
     }
 }

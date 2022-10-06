@@ -1,5 +1,7 @@
-import { FastifyPluginAsync } from "fastify";
+import { FastifyPluginAsync, FastifyRequest, FastifyReply } from "fastify";
 import { responseData } from "@interfaces/response";
+
+import { InterfaceUser } from "@interfaces/users";
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const { User } = fastify.db.models;
@@ -9,12 +11,15 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         {
             onRequest: [fastify.authVerify],
         },
-        async (request: any, reply: any) => {
+        async (
+            req: FastifyRequest,
+            reply: FastifyReply
+        ) => {
             try {
                 let cond = {
                     status: true,
                     is_deleted: false,
-                    role : 'user'
+                    role: "user",
                 };
 
                 const users = await User.find(cond);
@@ -26,9 +31,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                 } as responseData);
 
             } catch (err: any) {
-                throw fastify.httpErrors.badRequest(
-                    `Something went wrong: ${err.message ? err.message : err}`
-                );
+                throw fastify.httpErrors.badRequest(err);
             }
         }
     );
@@ -38,21 +41,26 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         {
             onRequest: [fastify.authVerify],
         },
-        async (request: any, reply: any) => {
+        async (
+            req: FastifyRequest<{ Body: InterfaceUser }>,
+            reply: FastifyReply
+        ) => {
             try {
-                const user = User.addOne(request.body);
+                const user = User.addOne(req.body);
                 await user.save();
 
                 return fastify.sendResponse({
-                    message: "Added successfully",
+                    message: fastify.locales(
+                        req.headers["lang"] as string,
+                        "CREATE_SUCCESS"
+                    ),
                     data: {
-                        user
+                        user,
                     },
                 } as responseData);
+
             } catch (err: any) {
-                throw fastify.httpErrors.badRequest(
-                    `Something went wrong: ${err.message ? err.message : err}`
-                );
+                throw fastify.httpErrors.badRequest(err);
             }
         }
     );
@@ -62,31 +70,36 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         {
             onRequest: [fastify.authVerify],
         },
-        async (request: any, reply: any) => {
+        async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
             try {
                 let cond = {
                     status: true,
                     is_deleted: false,
-                    _id: request.params.id,
+                    _id: req.params.id,
                 };
 
                 const user = await User.findOne(cond);
                 if (!user) {
                     throw fastify.httpErrors.notFound(
-                        `User not found with id ${request.params.id}`
+                        fastify.locales(
+                            req.headers["lang"] as string,
+                            "NOT_FOUND"
+                        )
                     );
                 }
 
                 return fastify.sendResponse({
-                    message: "Feteched successfully",
+                    message: fastify.locales(
+                        req.headers["lang"] as string,
+                        "READ_SUCCESS"
+                    ),
                     data: {
                         user,
                     },
                 } as responseData);
+
             } catch (err: any) {
-                throw fastify.httpErrors.badRequest(
-                    `Something went wrong: ${err.message ? err.message : err}`
-                );
+                throw fastify.httpErrors.badRequest(err);
             }
         }
     );
@@ -96,31 +109,41 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         {
             onRequest: [fastify.authVerify],
         },
-        async (request: any, reply: any) => {
+        async (
+            req: FastifyRequest<{ Params: { id: string }, Body: InterfaceUser }>,
+            reply: FastifyReply
+        ) => {
             try {
                 let cond = {
                     status: true,
                     is_deleted: false,
-                    _id: request.params.id,
+                    _id: req.params.id,
                 };
 
-                const user = await User.findOneAndUpdate(cond, request.body, { new: true });
+                const user = await User.findOneAndUpdate(cond, req.body, {
+                    new: true,
+                });
                 if (!user) {
                     throw fastify.httpErrors.notFound(
-                        `User not found with id ${request.params.id}`
+                        fastify.locales(
+                            req.headers["lang"] as string,
+                            "NOT_FOUND"
+                        )
                     );
                 }
 
                 return fastify.sendResponse({
-                    message: "Updated successfully",
+                    message: fastify.locales(
+                        req.headers["lang"] as string,
+                        "UPDATE_SUCECSS"
+                    ),
                     data: {
                         user,
                     },
                 } as responseData);
+
             } catch (err: any) {
-                throw fastify.httpErrors.badRequest(
-                    `Something went wrong: ${err.message ? err.message : err}`
-                );
+                throw fastify.httpErrors.badRequest(err);
             }
         }
     );
@@ -130,18 +153,21 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         {
             onRequest: [fastify.authVerify],
         },
-        async (request: any, reply: any) => {
+        async (req: FastifyRequest<{ Params: { id: string } }>, reply: any) => {
             try {
                 let cond = {
                     status: true,
                     is_deleted: false,
-                    _id: request.params.id,
+                    _id: req.params.id,
                 };
 
                 const user = await User.findOne(cond);
                 if (!user) {
                     throw fastify.httpErrors.notFound(
-                        `User not found with id ${request.params.id}`
+                        fastify.locales(
+                            req.headers["lang"] as string,
+                            "NOT_FOUND"
+                        )
                     );
                 }
 
@@ -149,18 +175,20 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                     email: user.email + "_DELETED_" + Date.now(),
                     mobile: user.mobile + "_DELETED_" + Date.now(),
                     is_deleted: true,
-                }); 
+                });
 
                 return fastify.sendResponse({
-                    message: "Deleted successfully",
+                    message: fastify.locales(
+                        req.headers["lang"] as string,
+                        "DELETE_SUCCESS"
+                    ),
                     data: {
                         user,
                     },
                 } as responseData);
+                
             } catch (err: any) {
-                throw fastify.httpErrors.badRequest(
-                    `Something went wrong: ${err.message ? err.message : err}`
-                );
+                throw fastify.httpErrors.badRequest(err);
             }
         }
     );

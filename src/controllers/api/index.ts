@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from "fastify";
+import { FastifyPluginAsync, FastifyRequest, FastifyReply } from "fastify";
 import { responseData } from "@interfaces/response"; 
 
 const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
@@ -9,7 +9,7 @@ const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         };
     });
 
-    fastify.get("/seed", async (request: any, reply: any) => {
+    fastify.get("/seed", async (req: FastifyRequest, reply: FastifyReply) => {
         try {
             const { User } = fastify.db.models;
 
@@ -17,10 +17,11 @@ const index: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
                 name: "Super Admin",
                 email: "superadmin@mail.com",
                 mobile: "9990009990",
+                role: "admin",
                 password: "password",
             };
 
-            await User.findOneAndDelete({email: adminData.email});
+            await User.findOneAndDelete({ email: adminData.email });
 
             const admin = User.addOne(adminData);
             await admin.save();

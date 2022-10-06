@@ -11,7 +11,10 @@
         "baseUrl": "src",
         "paths": {
             "@interfaces/*": ["interfaces/*"],
-            "@routes/*": ["routes/*"]
+            "@plugins/*": ["plugins/*"],
+            "@routes/*": ["routes/*"],
+            "@controllers/*": ["controllers/*"],
+            "@models/*": ["models/*"],
         },
         "declaration": true
     },

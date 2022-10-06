@@ -10,8 +10,8 @@ import pointOfView from "@fastify/view";
 import fastifyCors from "@fastify/cors";
 
 import { redisDb } from "@interfaces/dbConnections";
-
 import { logger } from "./utilities/logger";
+
 
 export type AppOptions = {
     // Place your custom options for app below here.
@@ -22,8 +22,6 @@ const app: FastifyPluginAsync<AppOptions> = async (
     opts
 ): Promise<void> => {
     try {
-        
-        
         //redis connection
         await fastify.register(fastifyRedis, {
             host: process.env.REDIS_HOST,
@@ -37,13 +35,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
             Date.now()
         );
         
-        // let lang: string;
-        // fastify.addHook("onRequest", async (request, reply) => {
-        //     lang  = (request.headers["accept-language"] as string) || "en";
-        //     console.log("lang", lang);
-        // });
-        
-       
+        fastify.addHook("preHandler", async (request: any, reply: any) => {
+            request.headers["lang"] = request.headers["lang"] ? request.headers["lang"] : "en";
+        });
+
         fastify.register(fastifyStatic, {
             root: join(__dirname, "public"),
             prefix: "/",
@@ -63,7 +58,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
                 callback(null, corsOptions);
             };
         });
-        
+
         fastify.register(pointOfView, {
             engine: {
                 ejs: require("ejs"),
@@ -71,16 +66,29 @@ const app: FastifyPluginAsync<AppOptions> = async (
             root: join(__dirname, "views"),
         });
 
-        fastify.setErrorHandler(function (error, request, reply) {
+        fastify.setErrorHandler(function (error, req, reply) {
+            let errMsg = JSON.stringify(
+                error.message
+                    ? error.message
+                    : {
+                        message: fastify.locales(
+                            req.headers["lang"] as string,
+                            "SOMETHING_WENT_WRONG"
+                        ),
+                    }
+            );
             const replyJson = {
                 statusCode: error.statusCode || 500,
-                error: "Bad Request",
-                message: error.message ? JSON.parse(error.message) : "Something went wrong.",
+                message: JSON.parse(errMsg).message,
+                data: {},
             };
-             
+
             if (replyJson.statusCode >= 500) {
-                replyJson.error = 'Server Error';
-            } 
+                replyJson.message = fastify.locales(
+                    req.headers["lang"] as string,
+                    "SERVER_ERROR"
+                );
+            }
             // Log error
             logger.error(
                 `${process.env.NODE_ENV} === ${process.env.MS_NAME} === ${error}`
@@ -100,10 +108,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
             options: opts,
         });
 
-        // This loads all plugins defined in routes
-        // define your routes in one of these
+        // This loads all plugins defined in controllers
+        // define your controllers in one of these
         void fastify.register(AutoLoad, {
-            dir: join(__dirname, "routes"),
+            dir: join(__dirname, "controllers"),
             options: opts,
         });
 

@@ -1,0 +1,17 @@
+{
+    "HEALTH_CHECK":"The API server is Up and Running",
+    "SERVER_ERROR": "Server error",
+    "SOMETHING_WENT_WRONG": "Something Went Wrong",
+    "SUCCESS": "Success",
+    "FAILED": "Failed",
+    "NOT_FOUND": "Not Found",
+    "UNIQUE": "It's Unique",
+    "NOT_UNIQUE": "Already in use",
+    "PASSWORD_WRONG": "Please enter correct password",
+    "LOGIN_SUCCESS": "Logged in successfully",
+    "LOGOUT_SUCCESS": "Logged out successfully",
+    "CREATE_SUCCESS": "Created successfully",
+    "UPDATE_SUCECSS": "Updated successfully",
+    "READ_SUCCESS": "Fetched successfully",
+    "DELETE_SUCCESS": "Deleted successfully"
+}

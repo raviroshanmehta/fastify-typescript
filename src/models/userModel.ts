@@ -1,29 +1,19 @@
 import { Schema, Document, model, Model } from "mongoose";
 const bcrypt = require("bcryptjs");
 
-export interface UserAttrs {
-    name: string;
-    email: string;
-    mobile: string;
-    role?: string;
-    password: string;
-    device?: object;
-}
+import { InterfaceUser } from "@interfaces/users";
 
 export interface UserModel extends Model<UserDocument> {
-    addOne(doc: UserAttrs): UserDocument;
+    addOne(doc: InterfaceUser): UserDocument;
 }
 
-export interface UserDocument extends Document {
-    name: string;
-    email: string;
-    mobile: string;
-    role: string;
-    password: string;
-    device: object;
+export interface UserDocument extends InterfaceUser, Document {
+    status: boolean;
+    is_deleted: boolean;
     createdAt: string;
     updatedAt: string;
 }
+
 export const UserSchema: Schema = new Schema(
     {
         name: {
@@ -73,7 +63,7 @@ export const UserSchema: Schema = new Schema(
     }
 );
 
-UserSchema.statics.addOne = (doc: UserAttrs) => {
+UserSchema.statics.addOne = (doc: InterfaceUser) => {
     return new User(doc);
 };
 
