@@ -34,9 +34,11 @@ const app: FastifyPluginAsync<AppOptions> = async (
             `${process.env.MS_NAME}:server_up_timestamp`,
             Date.now()
         );
-        
+
         fastify.addHook("preHandler", async (request: any, reply: any) => {
-            request.headers["lang"] = request.headers["lang"] ? request.headers["lang"] : "en";
+            request.headers["lang"] = request.headers["lang"]
+                ? request.headers["lang"]
+                : "en";
         });
 
         fastify.register(fastifyStatic, {
@@ -71,11 +73,11 @@ const app: FastifyPluginAsync<AppOptions> = async (
                 error.message
                     ? error.message
                     : {
-                        message: fastify.locales(
-                            req.headers["lang"] as string,
-                            "SOMETHING_WENT_WRONG"
-                        ),
-                    }
+                          message: fastify.locales(
+                              req.headers["lang"] as string,
+                              "SOMETHING_WENT_WRONG"
+                          ),
+                      }
             );
             const replyJson = {
                 statusCode: error.statusCode || 500,
@@ -108,19 +110,19 @@ const app: FastifyPluginAsync<AppOptions> = async (
             options: opts,
         });
 
-        // This loads all plugins defined in controllers
+        // This loads all controllers defined in controllers
         // define your controllers in one of these
         void fastify.register(AutoLoad, {
             dir: join(__dirname, "controllers"),
             options: opts,
         });
 
-        logger.info(`=================================`);
         logger.info(
-            `======= ENV: ${process.env.NODE_ENV}, MS_NAME: ${process.env.MS_NAME} =======`
+            `=== 🚀 App listening on the port ${process.env.PORT}  ===
+                NODE_ENV: ${process.env.NODE_ENV}
+                MS_NAME: ${process.env.MS_NAME} 
+            `
         );
-        logger.info(`🚀 App listening on the port ${process.env.PORT}`);
-        logger.info(`=================================`);
     } catch (err) {
         logger.error(
             `${process.env.NODE_ENV} === ${process.env.MS_NAME} === ${err}`

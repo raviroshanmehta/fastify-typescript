@@ -13,8 +13,7 @@
             "@interfaces/*": ["interfaces/*"],
             "@plugins/*": ["plugins/*"],
             "@routes/*": ["routes/*"],
-            "@controllers/*": ["controllers/*"],
-            "@models/*": ["models/*"],
+            "@controllers/*": ["controllers/*"]
         },
         "declaration": true
     },

@@ -1,8 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { FastifyPluginAsync, FastifyPluginOptions } from "fastify";
 import fp from "fastify-plugin";
-import mongoose from "mongoose";
-import { logger } from "../utilities/logger";
+import mongoose from "mongoose"; 
 
 import { User, UserModel } from "../models/userModel";
 
@@ -26,7 +25,8 @@ const ConnectDB: FastifyPluginAsync<MyPluginOptions> = async (
         mongoose.connection.on("disconnected", () => {
             fastify.log.error("MongoDB disconnected");
         });
-        await mongoose.connect(process.env.MONGO_URI as string, {
+        
+        mongoose.connect(process.env.MONGO_URI as string, {
             // useNewUrlParser: true,
             // useUnifiedTopology: true,
             // useCreateIndex: true,
@@ -37,8 +37,11 @@ const ConnectDB: FastifyPluginAsync<MyPluginOptions> = async (
 
         fastify.decorate("db", { models });
     } catch (error: any) {
-        logger.error(`${error}`);
-        fastify.log.error(error);
+        throw fastify.httpErrors.badRequest(
+            `Something went wrong during moongoose connect: ${
+                error.message ? error.message : error
+            }`
+        );
     }
 };
 export default fp(ConnectDB);
